@@ -12,18 +12,35 @@ describe 'GetStore action' do
   # </ShipWorks>
 
   let(:action) { 'getstore' }
-  let(:action_params) { {} }
 
-  include_context 'for ShipWorks actions'
-  it_should_behave_like "a ShipWorks API action"
+  context 'without action_params' do
+    let(:action_params) { {} }
 
-  it 'should use the store name from Spree configuration settings' do
-    Spree::Config.set :site_name => 'Awesome Spree Store'
-    xml.xpath('/ShipWorks/Store/Name').text.should == 'Awesome Spree Store'
+    include_context 'for ShipWorks actions'
+    it_should_behave_like "a ShipWorks API action"
+
+    it 'should use the store name from the default spree store' do
+      expect(xml.xpath('/ShipWorks/Store/Name').text).to eq('Spree Demo Site')
+    end
+
+    it 'should use the store site url from the default spree store' do
+      expect(xml.xpath('/ShipWorks/Store/Website').text).to eq('demo.spreecommerce.com')
+    end
   end
 
-  it 'should use the store site url from Spree configuration settings' do
-    Spree::Config.set :site_url => 'http://spree.awesomeness.com'
-    xml.xpath('/ShipWorks/Store/Website').text.should == 'http://spree.awesomeness.com'
+  context 'with store params' do
+    let(:store) { Spree::Store.new(name: 'Expected Store Name', url: 'expected.spree_url.com') }
+    let(:action_params) { { name: store.name, website: store.url } }
+
+    include_context 'for ShipWorks actions'
+    it_should_behave_like "a ShipWorks API action"
+
+    it 'should use the store name from the spree store' do
+      expect(xml.xpath('/ShipWorks/Store/Name').text).to eq(store.name)
+    end
+
+    it 'should use the store site url from the spree store' do
+      expect(xml.xpath('/ShipWorks/Store/Website').text).to eq(store.url)
+    end
   end
 end

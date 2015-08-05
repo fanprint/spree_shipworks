@@ -179,12 +179,12 @@ describe 'GetOrders action' do
     }
 
     it 'should return valid xml' do
-      order.should_receive(:created_at).
+      order.should_receive(:completed_at).
         and_return(DateTime.now)
       order.should_receive(:updated_at).
         and_return(DateTime.now)
 
-      SpreeShipworks::Orders.should_receive(:since_in_batches).
+      SpreeShipworks.order_class.should_receive(:since_in_batches).
         with(action_params['start'], action_params['maxcount']).
         and_yield(order)
 
@@ -203,9 +203,12 @@ describe 'GetOrders action' do
       create_admin_user
 
       order = Spree::Order.create!
-      order.payments.create!
+      order.update_attribute(:completed_at, Time.now)
+      payment = order.payments.new
+      payment.build_payment_method(name: 'Payment Method')
+      payment.save!
 
-      SpreeShipworks::Orders.should_receive(:since_in_batches).
+      SpreeShipworks.order_class.should_receive(:since_in_batches).
         with(action_params['start'], action_params['maxcount']).
         and_yield(order.extend(SpreeShipworks::Xml::Order))
 

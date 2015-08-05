@@ -3,10 +3,14 @@ module SpreeShipworks
     include Dsl
 
     def call(params)
-      order = Spree::Order.find(params['order'])
+      if SpreeShipworks::Config.use_split_shipments
+        shipment = Spree::Shipment.find_by_number(params['order'])
+      else
+        order = Spree::Order.find_by_number(params['order'])
+        shipment = order.shipments.first
+      end
 
-      shipment = order.shipments.first
-      if shipment.try(:update_attributes, { :tracking => params['tracking'] })
+      if shipment.try(:update_attributes, update_params(params))
         response do |r|
           r.element 'UpdateSuccess'
         end
@@ -19,6 +23,12 @@ module SpreeShipworks
       error_response("NOT_FOUND", "Unable to find an order with ID of '#{params['order']}'.")
     rescue => error
       error_response("INTERNAL_SERVER_ERROR", error.to_s)
+    end
+
+    private
+
+    def update_params(params)
+      { :tracking => params['tracking'] }
     end
   end
 end

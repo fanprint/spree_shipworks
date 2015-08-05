@@ -4,7 +4,7 @@ module SpreeShipworks
   describe Xml do
     let(:context)   { SpreeShipworks::Dsl::Context.new(document, document) }
     let(:document)  { Nokogiri::XML::Document.parse("<?xml version='1.0' standalone='yes'>") }
-    let(:order)     { Spree::Order.new.extend(SpreeShipworks::Xml::Order) }
+    let(:order)     { Spree::Order.new(number: 'R123456789').extend(SpreeShipworks::Xml::Order) }
 
     context 'Address' do
       let(:address) {
@@ -85,15 +85,14 @@ module SpreeShipworks
     context 'Creditcard' do
       let(:creditcard) {
         c = Spree::CreditCard.new(
-          :first_name => 'Testy',
-          :last_name  => 'Tester',
-          :number     => '4111111111111111',
-          :verification_value => '111',
-          :month => '12',
-          :year => '2012'
+          name: 'Testy Tester',
+          number:     '4111111111111111',
+          verification_value: '111',
+          month: '12',
+          year: '2012',
+          cc_type: 'visa'
         ).extend(SpreeShipworks::Xml::Creditcard)
         c.set_last_digits
-        c.set_card_type
         c
       }
       let(:xml) { creditcard.to_shipworks_xml(context) }
@@ -256,20 +255,25 @@ module SpreeShipworks
     context 'Order' do
       let(:xml) { order.to_shipworks_xml(context) }
 
+      let(:shipment) { double('shipment') }
+
       before(:each) do
-        order.should_receive(:created_at).
+        order.should_receive(:completed_at).
           and_return(DateTime.now)
 
         order.should_receive(:updated_at).
           and_return(DateTime.now)
 
-        order.should_receive(:shipping_method).
-          at_least(1).times.
-          and_return(Spree::ShippingMethod.new(:name => 'Ground'))
-
         order.should_receive(:ship_address).
           at_least(1).times.
           and_return(Spree::Address.new)
+
+        order.should_receive(:shipments).
+          at_least(1).times.
+          and_return([shipment])
+
+        shipment.should_receive(:shipping_method).
+          and_return(Spree::ShippingMethod.new(name: 'Ground'))
 
         order.should_receive(:bill_address).
           at_least(1).times.
@@ -338,7 +342,7 @@ module SpreeShipworks
       let(:xml) { order.to_shipworks_xml(context) }
 
       before(:each) do
-        order.should_receive(:created_at).
+        order.should_receive(:completed_at).
           and_return(DateTime.now)
 
         order.should_receive(:updated_at).

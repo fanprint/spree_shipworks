@@ -18,7 +18,7 @@ describe 'GetCount action' do
   it_should_behave_like "a ShipWorks API action"
 
   it 'should respond with number of orders that where updated after the specified date' do
-    SpreeShipworks::Orders.should_receive(:since).
+    SpreeShipworks.order_class.should_receive(:since).
       with(date).and_return(order_scope)
 
     order_scope.should_receive(:count).and_return(125)
@@ -30,7 +30,7 @@ describe 'GetCount action' do
     let(:action_params) { {} }
 
     it 'should return the total number of orders' do
-      SpreeShipworks::Orders.should_receive(:since).
+      SpreeShipworks.order_class.should_receive(:since).
         with(date_string).and_return(order_scope)
 
       order_scope.should_receive(:count).
@@ -44,7 +44,7 @@ describe 'GetCount action' do
     let(:action_params) { { 'start' => '' } }
 
     it 'should return the total number of orders' do
-      SpreeShipworks::Orders.should_receive(:since).
+      SpreeShipworks.order_class.should_receive(:since).
         with(date_string).and_return(order_scope)
 
       order_scope.should_receive(:count).

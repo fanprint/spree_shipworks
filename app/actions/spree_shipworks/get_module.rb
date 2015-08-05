@@ -5,8 +5,8 @@ module SpreeShipworks
     def call(params)
       response do |r|
         r.element "Module" do |r|
-          r.element "Platform", "Spree"
-          r.element "Developer", "Rails Dog, LLC (http://railsdog.com)"
+          r.element "Platform", "Spree Commerce"
+          r.element "Developer", "Spree Commerce Inc. (http://spreecommerce.com)"
           r.element "Capabilities" do |r|
             r.element "DownloadStrategy", "ByModifiedTime"
             r.element "OnlineCustomerID", 'supported' => 'true', 'dataType' => 'numeric'

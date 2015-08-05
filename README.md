@@ -1,13 +1,24 @@
 SpreeShipworks
 ==============
 
-Introduction goes here.
+This gem provides API for your spree shop, that allows shipworks to process your orders.
 
+Integrating
+-----------
 
-Example
-=======
+Add gem into your Gemfile:
 
-Example goes here.
+```
+gem 'spree_shipworks', git: 'git@github.com:bypotatoes/spree_shipworks.git', branch: '3-0-stable'
+```
+
+If you need, patch your `Spree::ApiController` through `api_controller_decorator.rb`
+```
+Spree::ApiController.class_eval do
+  # code goes here
+end
+```
+Load shipworks aplication and [add a Generic Module store](http://support.shipworks.com/support/solutions/articles/4000048147-adding-a-generic-module-store)
 
 Testing
 -------

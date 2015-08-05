@@ -10,7 +10,7 @@ module SpreeShipworks
 
       before(:each) do
         Spree::Order.should_receive(:where).
-          with(:state => SpreeShipworks::Orders::VALID_STATES, :shipment_state => "ready").
+          with(:state => SpreeShipworks.order_class::VALID_STATES, :shipment_state => "ready").
           and_return(where_state_scope)
 
         where_state_scope.should_receive(:order).

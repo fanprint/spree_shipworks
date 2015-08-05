@@ -2,7 +2,7 @@ shared_context 'for ShipWorks actions' do
   def create_admin_user
     unless Spree.user_class.find_by_email('spree@example.com').present?
       admin = Spree.user_class.create!(:email => 'spree@example.com', :password => 'spree123')
-      admin.spree_roles << Spree::Role.find_or_create_by_name(:admin)
+      admin.spree_roles << Spree::Role.where(name: :admin).first_or_create
     end
   end
 

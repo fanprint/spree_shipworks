@@ -10,7 +10,7 @@ describe 'UpdateShipment action' do
 
   let(:action) { 'updateshipment' }
   let(:action_params) {
-    { 'order' => '1', 'tracking' => '1' }
+    { 'order' => 'R1', 'tracking' => '1' }
   }
   let(:find_scope) {
     double('find_scope')
@@ -26,7 +26,7 @@ describe 'UpdateShipment action' do
   it_should_behave_like 'a ShipWorks API action'
 
   it 'should respond with success' do
-    Spree::Order.should_receive(:find).
+    Spree::Order.should_receive(:find_by_number).
       with(action_params['order']).
       and_return(find_scope)
 
@@ -56,7 +56,7 @@ describe 'UpdateShipment action' do
   # </ShipWorks>
 
   it 'should return an error if the order can not be found' do
-    Spree::Order.should_receive(:find).
+    Spree::Order.should_receive(:find_by_number).
       with(action_params['order']).
       and_raise(ActiveRecord::RecordNotFound)
 
@@ -65,7 +65,7 @@ describe 'UpdateShipment action' do
   end
 
   it 'should return an error if the order is missing shipments' do
-    Spree::Order.should_receive(:find).
+    Spree::Order.should_receive(:find_by_number).
       with(action_params['order']).
       and_return(find_scope)
 

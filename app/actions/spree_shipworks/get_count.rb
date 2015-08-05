@@ -5,7 +5,7 @@ module SpreeShipworks
     def call(params)
       begin
         response do |r|
-          r.element "OrderCount", SpreeShipworks::Orders.since(params['start']).count
+          r.element "OrderCount", SpreeShipworks.order_class.since(params['start']).count
         end
       rescue ArgumentError
         error_response("INVALID_DATE_FORMAT", "Unable to determine date format for '#{params['start']}'.")

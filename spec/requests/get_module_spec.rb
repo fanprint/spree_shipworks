@@ -7,12 +7,12 @@ describe 'GetModule action' do
   # <ShipWorks moduleVersion="3.0.1" schemaVersion="1.0.0">
   #   <Module>
   #     <Platform>Your Platform Name</Platform>
-  #     <Developer>Interapptive, Inc. (support@interapptive.com)</Developer> 
+  #     <Developer>Interapptive, Inc. (support@interapptive.com)</Developer>
   #     <Capabilities>
   #       <DownloadStrategy>ByModifiedTime</DownloadStrategy>
   #       <OnlineCustomerID supported="true" dataType="numeric" />
   #       <OnlineStatus supported="true" dataType="numeric" supportsComments="true" />
-  #       <OnlineShipmentUpdate supported="false" /> 
+  #       <OnlineShipmentUpdate supported="false" />
   #     </Capabilities>
   #   </Module>
   # </ShipWorks>
@@ -24,11 +24,11 @@ describe 'GetModule action' do
   it_should_behave_like "a ShipWorks API action"
 
   it 'should specify the platform name' do
-    xml.xpath('/ShipWorks/Module/Platform').text.should == 'Spree'
+    xml.xpath('/ShipWorks/Module/Platform').text.should == 'Spree Commerce'
   end
 
   it 'should specify the developer name' do
-    xml.xpath('/ShipWorks/Module/Developer').text.should == 'Rails Dog, LLC (http://railsdog.com)'
+    xml.xpath('/ShipWorks/Module/Developer').text.should == 'Spree Commerce Inc. (http://spreecommerce.com)'
   end
 
   it 'should specify the modified time download strategy' do
